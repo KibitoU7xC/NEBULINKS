@@ -14,9 +14,12 @@ app = FastAPI()
 # Load YOLOv8 model
 model = YOLO('models/best.pt')  # Use custom trained model
 
-# Initialize Gemini API
-API_KEY = "your_gemini_api_key_here"
-genai.configure(api_key=API_KEY)
+# Load API key from environment variable
+API_KEY = os.getenv("GEMINI_API_KEY")
+if API_KEY:
+    genai.configure(api_key=API_KEY)
+else:
+    raise ValueError("❌ ERROR: GEMINI_API_KEY is not set. Please configure it before running.")
 
 def analyze_with_gemini(player_data):
     if len(player_data['positions']) < 2 or player_data['distance'] == 0:
@@ -139,3 +142,7 @@ async def process_video(file: UploadFile = File(...)):
         shutil.copyfileobj(file.file, buffer)
     
     return {"status": "Processed successfully", "video_path": video_path}
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
