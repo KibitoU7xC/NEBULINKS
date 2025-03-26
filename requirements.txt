@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+torch
+ultralytics
+numpy
+opencv-python
+matplotlib
+google-generativeai
+shutil
